@@ -66,7 +66,7 @@ export default function LoginForm() {
     }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
         <div style={{ marginBottom: 32, textAlign: 'center' }}>
-          <img src="/logo.png" alt="Hipe" style={{ height: 56, width: 'auto', margin: '0 auto 20px', display: 'block' }} />
+          <img src="/logo.webp" alt="Hipe" style={{ height: 56, width: 'auto', margin: '0 auto 20px', display: 'block' }} />
           <h1 style={{ fontFamily: font.serif, color: C.textPrimary, fontSize: 32, fontWeight: 400, marginBottom: 6 }}>
             {mode === 'signin' ? 'Welcome back' : 'Join the community'}
           </h1>
