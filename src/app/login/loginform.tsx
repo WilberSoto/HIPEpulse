@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { C, font, glass } from '@/lib/theme'
 
@@ -16,10 +16,16 @@ export default function LoginForm() {
   const [oauthLoading, setOauthLoading] = useState<Provider | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [redirectTo, setRedirectTo] = useState('/dashboard')
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
   const anyLoading = emailLoading || oauthLoading !== null
+
+  // Read redirectTo from URL client-side only — avoids useSearchParams entirely
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const next = params.get('redirectTo')
+    if (next) setRedirectTo(next)
+  }, [])
 
   const signInWith = async (provider: Provider) => {
     setOauthLoading(provider)
@@ -59,8 +65,6 @@ export default function LoginForm() {
       padding: 16, fontFamily: font.sans,
     }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
-
-        {/* Logo */}
         <div style={{ marginBottom: 32, textAlign: 'center' }}>
           <img src="/logo.png" alt="Hipe" style={{ height: 56, width: 'auto', margin: '0 auto 20px', display: 'block' }} />
           <h1 style={{ fontFamily: font.serif, color: C.textPrimary, fontSize: 32, fontWeight: 400, marginBottom: 6 }}>
@@ -71,54 +75,42 @@ export default function LoginForm() {
           </p>
         </div>
 
-        {/* Card */}
         <div style={{ ...glass, padding: 28 }}>
-
-          {/* Email/password */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
-            <input
-              type="email" value={email} onChange={e => setEmail(e.target.value)}
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleEmailSubmit()}
               placeholder="Email" disabled={anyLoading}
               style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontFamily: font.sans, color: C.textPrimary, background: C.inputBg, border: `1px solid ${C.inputBorder}`, outline: 'none' }}
             />
-            <input
-              type="password" value={password} onChange={e => setPassword(e.target.value)}
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleEmailSubmit()}
               placeholder="Password" disabled={anyLoading}
               style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 13, fontFamily: font.sans, color: C.textPrimary, background: C.inputBg, border: `1px solid ${C.inputBorder}`, outline: 'none' }}
             />
-            <button
-              onClick={handleEmailSubmit} disabled={anyLoading}
+            <button onClick={handleEmailSubmit} disabled={anyLoading}
               style={{ width: '100%', padding: 11, borderRadius: 100, fontSize: 13, fontWeight: 500, background: C.btnPrimaryBg, color: C.btnPrimaryText, border: 'none', cursor: 'pointer', fontFamily: font.sans, opacity: anyLoading ? 0.6 : 1, transition: 'all 0.14s' }}
             >
               {emailLoading ? '…' : mode === 'signin' ? 'Sign in' : 'Create account'}
             </button>
           </div>
 
-          {/* Toggle */}
           <p style={{ textAlign: 'center', fontSize: 13, color: C.textSecondary, marginBottom: 16 }}>
             {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-            <button
-              onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null); setSuccessMsg(null) }}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.accent, fontSize: 13, fontFamily: font.sans, textDecoration: 'underline' }}
-            >
+            <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null); setSuccessMsg(null) }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.accent, fontSize: 13, fontFamily: font.sans, textDecoration: 'underline' }}>
               {mode === 'signin' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
 
-          {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
             <div style={{ flex: 1, height: 1, background: C.divider }} />
             <span style={{ fontSize: 12, color: C.textMuted }}>or</span>
             <div style={{ flex: 1, height: 1, background: C.divider }} />
           </div>
 
-          {/* OAuth */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {(['google', 'github'] as Provider[]).map(provider => (
-              <button
-                key={provider} onClick={() => signInWith(provider)} disabled={anyLoading}
+              <button key={provider} onClick={() => signInWith(provider)} disabled={anyLoading}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 10, borderRadius: 100, fontSize: 13, fontWeight: 500, background: C.btnSecBg, border: `1px solid ${C.btnSecBorder}`, color: C.textPrimary, cursor: 'pointer', fontFamily: font.sans, opacity: anyLoading ? 0.6 : 1, transition: 'all 0.14s' }}
               >
                 {oauthLoading === provider ? '…' : provider === 'google' ? (
