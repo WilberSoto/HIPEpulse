@@ -6,7 +6,7 @@ const PROTECTED_ROUTES = ['/dashboard', '/profile', '/messages', '/onboarding']
 // Routes that logged-in users shouldn't see (auth pages)
 const AUTH_ROUTES = ['/login', '/signup']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
