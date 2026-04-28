@@ -29,7 +29,7 @@ export default async function AboutPage() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {[
-            { eyebrow: 'Our mission', title: 'Make it easier for CUNY creatives to find each other', body: 'Through our platform, artists can post and discover gigs, auditions, commissions, and residencies — and build a profile that represents who they are and what they make.' },
+            { eyebrow: 'Our mission', title: 'Make it easier for CUNY creatives to find each other', body: 'Through our platform, artists can post and discover gigs, auditions, commissions, and build a profile that represents who they are and what they make.' },
             { eyebrow: 'Community', title: 'Great creative work happens when the right people connect', body: "We're building a space where CUNY students can showcase their practice, collaborate across disciplines, and turn their creative ambitions into real opportunities." },
             { eyebrow: 'Get started', title: 'Share your work, find your collaborators', body: 'Join the community today. Post your work, tag it by discipline, follow other creatives, and start building something together.' },
           ].map(({ eyebrow, title, body }) => (
