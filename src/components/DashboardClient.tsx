@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import PostComposer from '@/components/PostComposer'
@@ -17,16 +16,16 @@ export default function DashboardClient({ posts, userId, avatarUrl, username, fu
   userEmail?: string | null
   allTags: string[]
 }) {
-  const searchParams = useSearchParams()
   const [tab, setTab] = useState<'recent' | 'trending'>('recent')
   const [activeTag, setActiveTag] = useState<string | null>(null)
-  const [search, setSearch] = useState(searchParams.get('q') ?? '')
+  const [search, setSearch] = useState('')
 
-  // Sync search if URL param changes
+  // Read ?q= from URL client-side only — no useSearchParams
   useEffect(() => {
-    const q = searchParams.get('q')
+    const params = new URLSearchParams(window.location.search)
+    const q = params.get('q')
     if (q) setSearch(q)
-  }, [searchParams])
+  }, [])
 
   const searchFiltered = search.trim()
     ? posts.filter(p =>
@@ -43,7 +42,7 @@ export default function DashboardClient({ posts, userId, avatarUrl, username, fu
         user={{ id: userId, username, full_name: fullName, avatar_url: avatarUrl, email: userEmail }}
         searchValue={search}
         onSearch={setSearch}
-        />
+      />
       <div style={{ display: 'flex', minHeight: 'calc(100vh - 60px)' }}>
         <Sidebar
           username={username}

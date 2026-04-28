@@ -1,13 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { C, font } from '@/lib/theme'
 
 interface NavbarProps {
-  // Pass these when user is logged in
   user?: {
     id: string
     username?: string | null
@@ -15,16 +14,20 @@ interface NavbarProps {
     avatar_url?: string | null
     email?: string | null
   } | null
-  // Only pass these on the dashboard — controls local search
   searchValue?: string
   onSearch?: (value: string) => void
 }
 
-export default function Navbar({ user, searchValue, onSearch }: NavbarProps) {
+function NavbarInner({ user, searchValue, onSearch }: NavbarProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  // Local state used when onSearch isn't provided (non-dashboard pages)
-  const [localSearch, setLocalSearch] = useState(searchParams.get('q') ?? '')
+  const [localSearch, setLocalSearch] = useState('')
+
+  // Read ?q= from URL client-side only — no useSearchParams
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const q = params.get('q')
+    if (q) setLocalSearch(q)
+  }, [])
 
   const isDashboardSearch = onSearch !== undefined
   const currentSearch = isDashboardSearch ? (searchValue ?? '') : localSearch
@@ -34,7 +37,6 @@ export default function Navbar({ user, searchValue, onSearch }: NavbarProps) {
       onSearch(value)
     } else {
       setLocalSearch(value)
-      // Navigate to dashboard with search query
       if (value.trim()) {
         router.push(`/dashboard?q=${encodeURIComponent(value.trim())}`)
       }
@@ -59,14 +61,12 @@ export default function Navbar({ user, searchValue, onSearch }: NavbarProps) {
       display: 'flex', alignItems: 'center',
       height: 60, padding: '0 24px', gap: 16,
     }}>
-      {/* Logo */}
       <Link href={user ? '/dashboard' : '/'} style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
         <img src="/logo.webp" alt="Pulse" style={{ height: 32, width: 'auto', display: 'block' }} />
       </Link>
 
       <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)', flexShrink: 0 }} />
 
-      {/* Search — shown for all logged-in users and on the homepage */}
       {(user || onSearch !== undefined) && (
         <div style={{ flex: 1, position: 'relative', maxWidth: 480 }}>
           <svg style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: C.textMuted, pointerEvents: 'none' }}
@@ -96,7 +96,6 @@ export default function Navbar({ user, searchValue, onSearch }: NavbarProps) {
         </div>
       )}
 
-      {/* Right side */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
         <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.12)' }} />
 
@@ -138,5 +137,15 @@ export default function Navbar({ user, searchValue, onSearch }: NavbarProps) {
         )}
       </div>
     </nav>
+  )
+}
+
+export default function Navbar(props: NavbarProps) {
+  return (
+    <Suspense fallback={
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: C.header, borderBottom: `1px solid ${C.headerBorder}`, height: 60 }} />
+    }>
+      <NavbarInner {...props} />
+    </Suspense>
   )
 }
