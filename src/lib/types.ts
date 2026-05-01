@@ -98,6 +98,103 @@ export type Database = {
           },
         ]
       }
+      event_interests: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_interests_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_interests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          author_id: string
+          created_at: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          post_id: string | null
+          starts_at: string
+          tags: string[] | null
+          title: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          post_id?: string | null
+          starts_at: string
+          tags?: string[] | null
+          title: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          post_id?: string | null
+          starts_at?: string
+          tags?: string[] | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_with_meta"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       follows: {
         Row: {
           created_at: string | null
@@ -255,6 +352,7 @@ export type Database = {
           body: string
           created_at: string | null
           id: string
+          tags: string[] | null
           updated_at: string | null
         }
         Insert: {
@@ -262,6 +360,7 @@ export type Database = {
           body: string
           created_at?: string | null
           id?: string
+          tags?: string[] | null
           updated_at?: string | null
         }
         Update: {
@@ -269,6 +368,7 @@ export type Database = {
           body?: string
           created_at?: string | null
           id?: string
+          tags?: string[] | null
           updated_at?: string | null
         }
         Relationships: [
@@ -290,6 +390,7 @@ export type Database = {
           github: string | null
           id: string
           instagram: string | null
+          tags: string[] | null
           twitter: string | null
           username: string | null
           website: string | null
@@ -302,6 +403,7 @@ export type Database = {
           github?: string | null
           id: string
           instagram?: string | null
+          tags?: string[] | null
           twitter?: string | null
           username?: string | null
           website?: string | null
@@ -314,6 +416,7 @@ export type Database = {
           github?: string | null
           id?: string
           instagram?: string | null
+          tags?: string[] | null
           twitter?: string | null
           username?: string | null
           website?: string | null
@@ -332,6 +435,7 @@ export type Database = {
           full_name: string | null
           id: string | null
           like_count: number | null
+          tags: string[] | null
           updated_at: string | null
           username: string | null
         }
@@ -480,39 +584,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-
-export type PostImage = {
-  id: string 
-  post_id: string
-  url: string
-  position: number
-}
-
-export type PostWithMeta = {
-  id: string | null
-  body: string | null
-  tags?: string[] | null 
-  created_at: string | null
-  updated_at: string | null
-  author_id: string | null
-  username: string | null
-  full_name: string | null
-  avatar_url: string | null
-  like_count: number | null
-  comment_count: number | null
-  images?: PostImage[]
-  liked_by_me?: boolean
-}
-
-export type Profile = {
-  id: string
-  username: string | null
-  full_name: string | null
-  avatar_url: string | null
-  bio: string | null
-  website: string | null
-  twitter: string | null
-  github: string | null
-  instagram: string | null
-  created_at: string | null
-}

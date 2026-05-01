@@ -67,7 +67,7 @@ export default function PostComposer({ userId, avatarUrl }: { userId: string; av
           <textarea
             value={body}
             onChange={e => setBody(e.target.value)}
-            placeholder="Share something with Pulse…"
+            placeholder="Share something…"
             rows={3}
             maxLength={MAX}
             style={{

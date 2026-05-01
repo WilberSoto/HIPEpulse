@@ -37,9 +37,12 @@ function NavbarInner({ user, searchValue, onSearch }: NavbarProps) {
       onSearch(value)
     } else {
       setLocalSearch(value)
-      if (value.trim()) {
-        router.push(`/dashboard?q=${encodeURIComponent(value.trim())}`)
-      }
+    }
+  }
+
+  const submitSearch = (value: string) => {
+    if (value.trim()) {
+      router.push(`/search?q=${encodeURIComponent(value.trim())}`)
     }
   }
 
@@ -75,12 +78,13 @@ function NavbarInner({ user, searchValue, onSearch }: NavbarProps) {
           </svg>
           <input
             type="search"
-            placeholder="Search posts, artists, tags…"
+            placeholder="Search posts, people, events… (Enter)"
             value={currentSearch}
             onChange={e => handleSearch(e.target.value)}
             onKeyDown={e => {
-              if (e.key === 'Enter' && !isDashboardSearch && localSearch.trim()) {
-                router.push(`/dashboard?q=${encodeURIComponent(localSearch.trim())}`)
+              if (e.key === 'Enter') {
+                if (isDashboardSearch) return
+                submitSearch(localSearch)
               }
             }}
             style={{

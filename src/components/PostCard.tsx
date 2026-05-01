@@ -86,12 +86,14 @@ export default function PostCard({ post, currentUserId }: { post: PostWithMeta; 
           </span>
         )}
 
-        {/* Body */}
-        <p style={{ fontFamily: font.serif, fontSize: 18, fontWeight: 600, lineHeight: 1.3, color: C.textPrimary, marginBottom: 5 }}>
-          {post.body}
-        </p>
+        {/* Body — links to post page */}
+        <Link href={`/posts/${post.id}`} style={{ textDecoration: 'none', display: 'block', marginBottom: 5 }}>
+          <p style={{ fontFamily: font.serif, fontSize: 18, fontWeight: 600, lineHeight: 1.3, color: C.textPrimary }}>
+            {post.body}
+          </p>
+        </Link>
 
-        {/* Author + time */}
+        {/* Author + time — links to profile */}
         <Link href={`/profile/${post.username ?? post.author_id}`} style={{ fontSize: 12, color: C.textSecondary, fontWeight: 300, textDecoration: 'none', display: 'block', marginBottom: 12 }}>
           {post.full_name ?? post.username ?? 'Anonymous'} · {timeAgo(post.created_at ?? '')}
         </Link>
@@ -133,17 +135,17 @@ export default function PostCard({ post, currentUserId }: { post: PostWithMeta; 
             {likeCount}
           </button>
 
-          <button style={{
+          <Link href={`/posts/${post.id}`} style={{
             display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 6,
             fontSize: 12, fontWeight: 500, border: `1px solid ${C.cardBorder}`,
             background: 'rgba(255,255,255,0.08)', color: C.textSecondary,
-            fontFamily: font.sans, cursor: 'pointer',
+            fontFamily: font.sans, textDecoration: 'none',
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             {post.comment_count ?? 0}
-          </button>
+          </Link>
 
           <button style={{
             display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 6,

@@ -2,8 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'My App',
-  description: 'Next.js + Supabase auth starter',
+  title: 'HIPE - creative',
+  description: 'Creative community for CUNY',
+  icons: {
+    icon: '/logo.webp',
+    apple: '/logo.webp',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
