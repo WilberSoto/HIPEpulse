@@ -228,6 +228,218 @@ export type Database = {
           },
         ]
       }
+      group_events: {
+        Row: {
+          event_id: string
+          group_id: string
+          shared_at: string | null
+          shared_by: string
+        }
+        Insert: {
+          event_id: string
+          group_id: string
+          shared_at?: string | null
+          shared_by: string
+        }
+        Update: {
+          event_id?: string
+          group_id?: string
+          shared_at?: string | null
+          shared_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_events_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_events_shared_by_fkey"
+            columns: ["shared_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          group_id: string
+          joined_at: string | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          joined_at?: string | null
+          role?: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          joined_at?: string | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_messages: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string | null
+          group_id: string
+          id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string | null
+          group_id: string
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string | null
+          group_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_messages_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_messages_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_posts: {
+        Row: {
+          group_id: string
+          post_id: string
+          shared_at: string | null
+          shared_by: string
+        }
+        Insert: {
+          group_id: string
+          post_id: string
+          shared_at?: string | null
+          shared_by: string
+        }
+        Update: {
+          group_id?: string
+          post_id?: string
+          shared_at?: string | null
+          shared_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_posts_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_posts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_posts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_with_meta"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_posts_shared_by_fkey"
+            columns: ["shared_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_private: boolean
+          name: string
+          owner_id: string
+          requires_approval: boolean
+          tags: string[] | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          name: string
+          owner_id: string
+          requires_approval?: boolean
+          tags?: string[] | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_private?: boolean
+          name?: string
+          owner_id?: string
+          requires_approval?: boolean
+          tags?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groups_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           created_at: string | null
@@ -451,7 +663,8 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      is_group_admin: { Args: { gid: string; uid: string }; Returns: boolean }
+      is_group_member: { Args: { gid: string; uid: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -584,3 +797,68 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
+export type Profile = {
+  id: string
+  username: string | null
+  full_name: string | null
+  avatar_url: string | null
+  bio: string | null
+  website: string | null
+  twitter: string | null
+  github: string | null
+  instagram: string | null
+  created_at: string | null
+}
+
+// ── Custom types ──
+export type PostImage = {
+  id: string
+  post_id: string
+  url: string
+  position: number
+}
+
+export type PostWithMeta = {
+  id: string | null
+  body: string | null
+  tags?: string[] | null
+  created_at: string | null
+  updated_at: string | null
+  author_id: string | null
+  username: string | null
+  full_name: string | null
+  avatar_url: string | null
+  like_count: number | null
+  comment_count: number | null
+  images?: PostImage[]
+  liked_by_me?: boolean
+}
+
+export type Event = {
+  id: string
+  author_id: string
+  title: string
+  description: string | null
+  location: string | null
+  starts_at: string
+  ends_at: string | null
+  tags: string[] | null
+  image_url: string | null
+  post_id: string | null
+  created_at: string | null
+}
+
+export type EventInterest = {
+  user_id: string
+  event_id: string
+  created_at: string | null
+}
+
+export type EventWithMeta = Event & {
+  username: string | null
+  full_name: string | null
+  avatar_url: string | null
+  interest_count: number
+  interested: boolean
+}
