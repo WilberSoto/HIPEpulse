@@ -21,7 +21,7 @@ export default async function AboutPage() {
             Where <em style={{ fontStyle: 'italic', color: C.accent }}>creatives</em> find each other
           </h1>
           <p style={{ fontSize: 15, color: C.textSecondary, fontWeight: 300, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
-            Welcome to Pulse — the platform dedicated to connecting CUNY's creative community. Whether you're a musician, filmmaker, visual artist, writer, dancer, or anything in between, Pulse is your space to share work, find collaborators, and discover opportunities.
+            Welcome to Hipe - Creative, the platform dedicated to connecting CUNY's creative community. Whether you're a musician, filmmaker, visual artist, writer, dancer, or anything in between, HIPE - Creative is your space to share work, find collaborators, and discover opportunities.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default async function AboutPage() {
 
         <div style={{ marginTop: 56, textAlign: 'center' }}>
           <Link href={user ? '/dashboard' : '/login'} style={{ display: 'inline-block', padding: '12px 32px', borderRadius: 100, background: C.btnPrimaryBg, color: C.btnPrimaryText, fontSize: 14, fontWeight: 500, textDecoration: 'none' }}>
-            {user ? 'Go to the feed →' : 'Join Pulse →'}
+            {user ? 'Go to the feed →' : 'Join the community →'}
           </Link>
         </div>
       </main>

@@ -17,7 +17,7 @@ export default async function NewGroupPage() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Groups
           </Link>
-          <Link href="/"><img src="/logo.png" alt="Hipe" style={{ height: 32, width: 'auto', display: 'block' }} /></Link>
+          <Link href="/"><img src="/logo.webp" alt="Hipe" style={{ height: 32, width: 'auto', display: 'block' }} /></Link>
           <div style={{ width: 60 }} />
         </div>
       </header>
